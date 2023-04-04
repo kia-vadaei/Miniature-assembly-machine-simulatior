@@ -26,10 +26,16 @@ struct CharArray
     char strs[500][255];
 };
 
+struct Map
+{
+    char lable[100];
+    int address;
+};
+
 
 struct CharArray read_assembly_file(char *);
 void show_in_animataion(char *);
-
+int get_value(struct Map * , int , char *);
 
 
 int main() {
@@ -84,3 +90,14 @@ void show_in_animataion(char * str)
         Sleep(350);
     }
 }
+
+int get_value(struct Map * lables , int n , char * key)
+{
+    for(int i = 0 ; i < n; i++)
+    {
+        if(strcmp(lables[i].lable , key))
+            return lables[i].address;
+    }
+    return -1;
+}
+
