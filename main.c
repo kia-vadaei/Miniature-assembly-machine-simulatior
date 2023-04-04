@@ -3,6 +3,8 @@
 #ifdef __unix__
 
 #define OS_Windows 0
+#define boolean _Bool
+#define Sleep sleep
     #include <unistd.h>
     #include <stdlib.h>
     #include <stdio.h>
