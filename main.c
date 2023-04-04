@@ -5,6 +5,8 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include <time.h>
+
 
 #elif defined(_WIN32) || defined(WIN32)
 
@@ -13,6 +15,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
+#include <time.h>
 #define DIV 1048576
 #define WIDTH 7
 
@@ -25,18 +28,21 @@ struct CharArray
 
 
 struct CharArray read_assembly_file(char *);
+void show_in_animataion(char *);
+
+
+
 int main() {
     if(OS_Windows)
     {
         system("color 06");
-//        struct CharArray tmp =  read_assembly_file("file.txt");
+        struct CharArray tmp =  read_assembly_file("file.txt");
 //        printf("%s", tmp.strs[0]);
     }
     else
         printf("This is Linux");
 
     //////////////////////////////////////////////////////////////////
-
 
 
 
@@ -68,4 +74,13 @@ struct CharArray read_assembly_file(char * fileName)
         i++;
     }
     return rslt;
+}
+
+void show_in_animataion(char * str)
+{
+    for(int i = 0 ; i < strlen(str) ; ++i)
+    {
+        printf("%c" , str[i]);
+        Sleep(350);
+    }
 }
