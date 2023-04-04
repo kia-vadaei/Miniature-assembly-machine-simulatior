@@ -1,0 +1,3 @@
+D:/Private/uni/Coding/Miniature assembly machine simulatior/Miniature-assembly-machine-simulatior/cmake-build-debug/CMakeFiles/Miniature_assembly_machine_simulatior.dir
+D:/Private/uni/Coding/Miniature assembly machine simulatior/Miniature-assembly-machine-simulatior/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Private/uni/Coding/Miniature assembly machine simulatior/Miniature-assembly-machine-simulatior/cmake-build-debug/CMakeFiles/rebuild_cache.dir
