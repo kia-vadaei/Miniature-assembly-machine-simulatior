@@ -1,6 +1,7 @@
-	add	1,2,3	#add
+	add	1,2,3
 	add	1,2,5	#load
-start	addi	4,5,6	#dsfsdfsdfdsfdsf
-j	done
-done	j	exit
+	lw	1,0,five
+start	addi	4,5,123
+j	five
+five	j	exit
 exit	halt

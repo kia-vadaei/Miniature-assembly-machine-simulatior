@@ -30,7 +30,7 @@ int main() {
         printf("%s : %d\n" , labelsMap[i].lable , labelsMap[i].address);
 
     struct Instruction * insts = set_each_line_inst(numberOfLabels , labelsMap , strs);
-    printf("%d%d%d",insts[2].imm , insts[2].rt , insts[2].rs);
+    printf("%d, %d, %d",insts[2].imm , insts[2].rs , insts[2].rt);
 
 
     return 0;
@@ -185,6 +185,12 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                     rgstrs = strtok(NULL, ",");//next one
 
                     insts[i].rt = strtol(rgstrs, &tmpEnd, 10);
+
+                    if(insts[i].rd > 15 || insts[i].rs > 15 || insts[i].rt > 15)
+                    {
+                        printf("ERROR");
+                        exit(1);
+                    }
                     break;
                 case 1: // I_TYPE
                     insts[i].rt = strtol(rgstrs, &tmpEnd, 10); //rt
@@ -201,8 +207,15 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
                         if (tmpInt != -1)
                             insts[i].imm = tmpInt;
-                        else
+                        else {
                             printf("ERROR");
+                            exit(1);
+                        }
+                    }
+                    if(insts[i].rs > 15 || insts[i].rt > 15)
+                    {
+                        printf("ERROR");
+                        exit(1);
                     }
                     break;
                 case 2:
@@ -214,8 +227,10 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
                         if (tmpInt != -1)
                             insts[i].imm = tmpInt;
-                        else
+                        else {
                             printf("ERROR");
+                            exit(1);
+                        }
                     }
                     break;
                 default:
