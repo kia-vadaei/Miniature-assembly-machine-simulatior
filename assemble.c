@@ -17,7 +17,7 @@ int main() {
     else
         printf("This is Linux");
 
-    //show_welcome_message();
+    show_welcome_message();
     //////////////////////////////////////////////////////////////////
     int numberOfLabels = 0;
     int numberOfLines;
@@ -30,7 +30,7 @@ int main() {
         printf("%s : %d\n" , labelsMap[i].lable , labelsMap[i].address);
 
     struct Instruction * insts = set_each_line_inst(numberOfLabels , labelsMap , strs);
-    printf("%d, %d, %d",insts[2].imm , insts[2].rs , insts[2].rt);
+    printf("%d, %d, %d",insts[6].imm , insts[6].rs , insts[6].rt);
 
 
     return 0;
@@ -46,8 +46,8 @@ void show_in_animataion(char * str)
 
 void show_welcome_message()
 {
-    show_in_animataion("\n\n WELCOME TO Miniature ASSEMBLER SIMULATION!\n TO START YOU SHOULD USE THE COMMAND "
-                       "BELLOW:\n ---> ASSEMBLY INPUT_FILE.AC OUTPUT_FILE.MC\n\n");
+    show_in_animataion("\n\n\t\t\t\t\tWELCOME TO Miniature ASSEMBLER SIMULATION!\n\t\t\t\t\tTO START YOU SHOULD USE THE COMMAND "
+                       "BELLOW:\n\t\t\t\t\t---> ASSEMBLY INPUT_FILE.AC OUTPUT_FILE.MC\n\n\t\t\t\t\t");
     Sleep(500);
 }
 struct CharArray read_assembly_file(char * fileName)
@@ -242,7 +242,8 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
         }
         else // if it was halt
         {
-            insts[i].imm = 14;
+            insts[i].opCode = 14;
+
         }
         insts[i].PC = i;
 
