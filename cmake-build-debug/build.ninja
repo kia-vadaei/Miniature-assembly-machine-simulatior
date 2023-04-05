@@ -49,14 +49,8 @@ cmake_ninja_workdir = D$:/Private/uni/Coding/Miniature$ assembly$ machine$ simul
 
 build cmake_object_order_depends_target_Miniature_assembly_machine_simulatior: phony || CMakeFiles/Miniature_assembly_machine_simulatior.dir
 
-build CMakeFiles/Miniature_assembly_machine_simulatior.dir/main.c.obj: C_COMPILER__Miniature_assembly_machine_simulatior_Debug D$:/Private/uni/Coding/Miniature$ assembly$ machine$ simulatior/Miniature-assembly-machine-simulatior/main.c || cmake_object_order_depends_target_Miniature_assembly_machine_simulatior
-  DEP_FILE = CMakeFiles\Miniature_assembly_machine_simulatior.dir\main.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
-  OBJECT_DIR = CMakeFiles\Miniature_assembly_machine_simulatior.dir
-  OBJECT_FILE_DIR = CMakeFiles\Miniature_assembly_machine_simulatior.dir
-
-build CMakeFiles/Miniature_assembly_machine_simulatior.dir/Structs.c.obj: C_COMPILER__Miniature_assembly_machine_simulatior_Debug D$:/Private/uni/Coding/Miniature$ assembly$ machine$ simulatior/Miniature-assembly-machine-simulatior/Structs.c || cmake_object_order_depends_target_Miniature_assembly_machine_simulatior
-  DEP_FILE = CMakeFiles\Miniature_assembly_machine_simulatior.dir\Structs.c.obj.d
+build CMakeFiles/Miniature_assembly_machine_simulatior.dir/assemble.c.obj: C_COMPILER__Miniature_assembly_machine_simulatior_Debug D$:/Private/uni/Coding/Miniature$ assembly$ machine$ simulatior/Miniature-assembly-machine-simulatior/assemble.c || cmake_object_order_depends_target_Miniature_assembly_machine_simulatior
+  DEP_FILE = CMakeFiles\Miniature_assembly_machine_simulatior.dir\assemble.c.obj.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles\Miniature_assembly_machine_simulatior.dir
   OBJECT_FILE_DIR = CMakeFiles\Miniature_assembly_machine_simulatior.dir
@@ -69,7 +63,7 @@ build CMakeFiles/Miniature_assembly_machine_simulatior.dir/Structs.c.obj: C_COMP
 #############################################
 # Link the executable Miniature_assembly_machine_simulatior.exe
 
-build Miniature_assembly_machine_simulatior.exe: C_EXECUTABLE_LINKER__Miniature_assembly_machine_simulatior_Debug CMakeFiles/Miniature_assembly_machine_simulatior.dir/main.c.obj CMakeFiles/Miniature_assembly_machine_simulatior.dir/Structs.c.obj
+build Miniature_assembly_machine_simulatior.exe: C_EXECUTABLE_LINKER__Miniature_assembly_machine_simulatior_Debug CMakeFiles/Miniature_assembly_machine_simulatior.dir/assemble.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Miniature_assembly_machine_simulatior.dir

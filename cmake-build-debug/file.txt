@@ -1,7 +1,6 @@
-add	$1,$2,$3	#add
-lw	$1,$2,$5	#load
-start	add $4,$5,$6	#dsfsdfsdfdsfdsf
-j	sd;lfksdlfk
-done	fgkdfklgjdkfjg
-start2	ldklkdf;sldk
-exit	s;ldfk;lsdkf
+	add	1,2,3	#add
+	add	1,2,5	#load
+start	addi	4,5,6	#dsfsdfsdfdsfdsf
+j	done
+done	j	exit
+exit	halt
