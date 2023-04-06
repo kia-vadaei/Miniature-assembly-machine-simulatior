@@ -10,6 +10,7 @@
     #include <stdio.h>
     #include <string.h>
     #include <time.h>
+    #include <math.h>
     #include "Structs.c"
 
 #elif defined(_WIN32) || defined(WIN32)
@@ -20,6 +21,8 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <time.h>
+#include <math.h>
+
 //#include "assemble.h"
 
 #define DIV 1048576
@@ -64,6 +67,10 @@ boolean is_in_I_TYPE(char *);
 boolean is_in_J_TYPE(char *);
 boolean is_op_code(char * );
 int op_code_to_int(char * , int *);
+char * decimal_to_hex(int);
+int hex_to_decimal(char *);
+char * reverse(char *);
+
 
 struct Instruction * set_each_line_inst(int  , struct Map* , struct CharArray );
 

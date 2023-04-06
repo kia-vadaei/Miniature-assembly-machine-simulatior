@@ -1,5 +1,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wexcess-initializers"
+//#include <Mmsystem.h>
 
 
 #include "assemble.h"
@@ -17,9 +18,10 @@ int main() {
     else
         printf("This is Linux");
 
-    show_welcome_message();
+    //show_welcome_message();
+    //scanf("->%d");
     //////////////////////////////////////////////////////////////////
-    int numberOfLabels = 0;
+    /*int numberOfLabels = 0;
     int numberOfLines;
     struct CharArray strs = read_assembly_file("file.txt");
 
@@ -31,6 +33,9 @@ int main() {
 
     struct Instruction * insts = set_each_line_inst(numberOfLabels , labelsMap , strs);
     printf("%d, %d, %d",insts[6].imm , insts[6].rs , insts[6].rt);
+    */
+
+    printf("%d\n", hex_to_decimal("C") );
 
 
     return 0;
@@ -46,7 +51,7 @@ void show_in_animataion(char * str)
 
 void show_welcome_message()
 {
-    show_in_animataion("\n\n\t\t\t\t\tWELCOME TO Miniature ASSEMBLER SIMULATION!\n\t\t\t\t\tTO START YOU SHOULD USE THE COMMAND "
+    show_in_animataion("\n\n\t\t\t\t\tWELCOME TO MINIATURE ASSEMBLER SIMULATION!\n\t\t\t\t\tTO START YOU SHOULD USE THE COMMAND "
                        "BELLOW:\n\t\t\t\t\t---> ASSEMBLY INPUT_FILE.AC OUTPUT_FILE.MC\n\n\t\t\t\t\t");
     Sleep(500);
 }
@@ -273,12 +278,63 @@ int op_code_to_int(char * opCode , int * type)
             return i + 13;
         }
 
+}char * decimal_to_hex(int decimalNumber)
+{
+    long int remainder, quotient;
+    int i = 0, j, tmp;
+    char * hexadecimalNumber = malloc(sizeof (char) * 100);
+    quotient = decimalNumber;
+    while (quotient != 0)
+    {
+        tmp = quotient % 16;
+        //To convert integer into character
+        if (tmp < 10)
+            tmp = tmp + 48;
+        else
+            tmp = tmp + 55; // to convert to ABCDEF
+        hexadecimalNumber[i++] = (char)tmp;
+        quotient = quotient / 16;
+    }
+    hexadecimalNumber[i] = '\0';
+    reverse(hexadecimalNumber);
+    return hexadecimalNumber;
 }
 
+int hex_to_decimal(char * hexadecimalnumber)
+{
+    int decimalNumber = 0;
+    // Storing hexa number digits in one array
+    char hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    int i, j, power = 0, digit;
 
+    // Converting hexadecimal number to equivalent decimal
+    // number
+    for (i = (int)strlen(hexadecimalnumber) - 1; i >= 0; --i) {
 
+        // search if given input character is present in the
+        // array or not. if it present in the array then
+        // find the equivalent decimal number for each hexa
+        // digit
+        for (j = 0; j < 16; j++)
+            if (hexadecimalnumber[i] == hexDigits[j])
+                decimalNumber += j * (int)pow(16, power);
+        power++;
+    }
+    // printing the result
 
+    return decimalNumber;
+}
 
+char * reverse(char * str)
+{
+    for(int i = 0 ; i < (int) strlen(str) / 2 ; i++)
+    {
+        char tmp = str[i];
+        str[i] = str[strlen(str) - 1 - i];
+        str[strlen(str) - 1 - i] = tmp;
+    }
+}
 
 
 
