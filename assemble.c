@@ -21,7 +21,7 @@ int main() {
     //show_welcome_message();
     //scanf("->%d");
     //////////////////////////////////////////////////////////////////
-    /*int numberOfLabels = 0;
+    int numberOfLabels = 0;
     int numberOfLines;
     struct CharArray strs = read_assembly_file("file.txt");
 
@@ -32,10 +32,17 @@ int main() {
         printf("%s : %d\n" , labelsMap[i].lable , labelsMap[i].address);
 
     struct Instruction * insts = set_each_line_inst(numberOfLabels , labelsMap , strs);
-    printf("%d, %d, %d",insts[6].imm , insts[6].rs , insts[6].rt);
-    */
 
-    printf("%d\n", hex_to_decimal("C") );
+
+    to_machine_code(insts , numberOfLines);
+
+    for(int i = 0 ; i < numberOfLines; i++)
+        printf("\n%s : %d\n" , insts[i].inst , (int) insts[i].intInst);
+
+    //printf("%d, %d, %d",insts[6].opCode , insts[6].rs , insts[6].rt);
+
+    //printf("\n%c\n" , decimal_to_hex(14)[0]);
+
 
 
     return 0;
@@ -174,6 +181,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
         int tmpType; // to recognize the type of instruction
         insts[i].opCode = op_code_to_int(tmp , &tmpType); // to save opcode in decimal
         insts[i].instType = tmpType;
+        insts[i].PC = i;
         if(strcmp(tmp , "halt") != 0) {
             tmp = strtok(NULL, "\t"); // go to field part
 
@@ -250,7 +258,6 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
             insts[i].opCode = 14;
 
         }
-        insts[i].PC = i;
 
 
     }
@@ -278,7 +285,9 @@ int op_code_to_int(char * opCode , int * type)
             return i + 13;
         }
 
-}char * decimal_to_hex(int decimalNumber)
+}
+
+char * decimal_to_hex(int decimalNumber)
 {
     long int remainder, quotient;
     int i = 0, j, tmp;
@@ -295,7 +304,13 @@ int op_code_to_int(char * opCode , int * type)
         hexadecimalNumber[i++] = (char)tmp;
         quotient = quotient / 16;
     }
-    hexadecimalNumber[i] = '\0';
+    if(i != 0)
+        hexadecimalNumber[i] = '\0';
+    else
+    {
+        hexadecimalNumber[i] = '0';
+        hexadecimalNumber[i + 1] = '\0';
+    }
     reverse(hexadecimalNumber);
     return hexadecimalNumber;
 }
@@ -336,8 +351,79 @@ char * reverse(char * str)
     }
 }
 
+void to_machine_code(struct Instruction * inst , int numberOfLines)
+{
+    for(int i = 0 ; i < numberOfLines; ++i)
+    {
+        char * tmpImm;
+        int tmpDif;
+        switch (inst[i].instType)
+        {
+            case 0: //R_TYPE
+                //Unused digits --->
+                inst[i].inst[0] = '0';
+                inst[i].inst[5] = '0';
+                inst[i].inst[6] = '0';
+                inst[i].inst[7] = '0';
+                //////////////////////
+                inst[i].inst[1] = decimal_to_hex(inst[i].opCode)[0];
+                inst[i].inst[2] = decimal_to_hex(inst[i].rs)[0];
+                inst[i].inst[3] = decimal_to_hex(inst[i].rt)[0];
+                inst[i].inst[4] = decimal_to_hex(inst[i].rd)[0];
+                break;
+            case 1: //I_TYPE
+                //Unused digits --->
+                inst[i].inst[0] = '0';
+                //////////////////////
+                inst[i].inst[1] = decimal_to_hex(inst[i].opCode)[0];
+                inst[i].inst[2] = decimal_to_hex(inst[i].rs)[0];
+                inst[i].inst[3] = decimal_to_hex(inst[i].rt)[0];
+                //////////////////////
+                tmpImm = decimal_to_hex(inst[i].imm);
 
+                tmpDif = 4 - (int)strlen(tmpImm);
+
+                for(int j = 0 ; j  < tmpDif; j++)
+                    inst[i].inst[j+4] = '0';
+
+                for(int j = 0 ; j < 4 ; j++)
+                    inst[i].inst[j+4+tmpDif] = tmpImm[j];
+
+                break;
+            case 2: //J_TYPE
+                //Unused digits --->
+                inst[i].inst[0] = '0';
+                //////////////////////
+                inst[i].inst[1] = decimal_to_hex(inst[i].opCode)[0];
+                inst[i].inst[2] = '0';
+                inst[i].inst[3] = '0';
+                //////////////////////
+                tmpImm = decimal_to_hex(inst[i].imm);
+
+                tmpDif = 4 - (int)strlen(tmpImm);
+
+                for(int j = 0 ; j  < tmpDif; j++)
+                    inst[i].inst[j+4] = '0';
+
+                for(int j = 0 ; j < 4 ; j++)
+                    inst[i].inst[j+4+tmpDif] = tmpImm[j];
+
+                break;
+            default:
+                //ERR
+                break;
+        }
+
+        inst[i].intInst = hex_to_decimal(inst[i].inst);
+    }
+}
 
 
 
 #pragma clang diagnostic pop
+
+
+
+
+
+

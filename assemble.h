@@ -70,10 +70,10 @@ int op_code_to_int(char * , int *);
 char * decimal_to_hex(int);
 int hex_to_decimal(char *);
 char * reverse(char *);
-
+void to_machine_code(struct Instruction * , int);
 
 struct Instruction * set_each_line_inst(int  , struct Map* , struct CharArray );
 
 char R_TYPE [][10] = {"add" , "sub" , "slt" , "or" , "nand"};
 char I_TYPE [][10] = {"addi" , "ori" , "slti" , "lui" , "lw" , "sw" ,"beq" ,"jalr"};
-char J_TYPE [][10] = {"halt" , "j"};
+char J_TYPE [][10] = {"j" , "halt"};

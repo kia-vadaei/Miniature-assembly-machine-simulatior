@@ -2,6 +2,6 @@
 	add	1,2,5	#load
 	lw	1,0,five
 start	addi	4,5,123
-j	five
+	j	five
 five	j	exit
 exit	halt
