@@ -10,42 +10,64 @@ int main() {
     if(OS_Windows)
     {
         system("color 06");
-//        printf("%s", labelsMap.strs[0]);
     }
     else
-        printf("This is Linux");
+        printf("This is Linux\n");
 
     //show_welcome_message();
-    //scanf("->%d");
+
     //////////////////////////////////////////////////////////////////
+
+    char inst[50];
+    printf("%s" , ">> ");
+    gets(inst);
+
+    char * tmpInst = strtok(inst, " ");
+
+    //printf("%s",ordr);
+
+    while(strcmp(tmpInst , "assemble"))
+    {
+        printf("To assemble a file, please use the instruction \"assemble input.ac , output.mc\".\n>> ");
+        gets(inst);
+        tmpInst = strtok(inst, " ");
+    }
+    tmpInst = strtok(NULL, " ");
+    char tmpInput[50] , tmpOutput[50];
+    char inputFileName[50] = "Input/" , outputFileName [50] = "Output/";
+    strcpy(tmpInput , tmpInst);
+    strcat(inputFileName , tmpInput);
+
+    tmpInst = strtok(NULL, " ");
+    strcpy(tmpOutput , tmpInst);
+    strcat(outputFileName , tmpOutput);
+
+    //////////////////////////////////////////////////////////////////
+
+
+
     mkdir("Output");
     mkdir("Input");
+
     int numberOfLabels = 0;
     int numberOfLines;
-    struct CharArray strs = read_assembly_file("Input/file.txt");
+
+    struct CharArray strs = read_assembly_file(inputFileName);
 
     numberOfLines = strs.linesNum;
 
     struct Map * labelsMap = set_labels(&numberOfLabels, strs);
-    for(int i = 0 ; i < numberOfLabels;i++)
-        printf("%s : %d\n" , labelsMap[i].lable , labelsMap[i].address);
 
     struct Instruction * insts = set_each_line_inst(numberOfLabels , labelsMap , strs);
 
-
     to_machine_code(insts , numberOfLines);
 
-    write_output(_output_address , numberOfLines , insts);
-
-//    for(int i = 0 ; i < numberOfLines; i++)
-//        printf("\n%s : %d\n" , insts[i].inst , (int) insts[i].intInst);
-
-    //printf("%d, %d, %d",insts[6].opCode , insts[6].rs , insts[6].rt);
-
-    //printf("\n%c\n" , decimal_to_hex(14)[0]);
+    write_output(outputFileName , numberOfLines , insts);
 
     struct Error tmpErr = {-1,-1};
     write_error(_errors_address , &tmpErr);
+
+    scanf("");
     return 0;
 }
 void show_in_animataion(char * str)
@@ -179,6 +201,12 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
         char * tmp = strtok(rslt.strs[i], "\t");
         while(!is_op_code(tmp))
         {
+            if(!strcmp(tmp , ".fill"))
+            {
+                insts[i].instType = 3;
+                insts[i].PC = i;
+                break;
+            }
             tmp = strtok(NULL, "\t");
 
             if(tmp == NULL)
@@ -187,19 +215,23 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                 write_error(_errors_address , &err);
                 exit(1);
             }
-        }
 
-        int tmpType; // to recognize the type of instruction
-        insts[i].opCode = op_code_to_int(tmp , &tmpType); // to save opcode in decimal
-        insts[i].instType = tmpType;
-        insts[i].PC = i;
-        if(strcmp(tmp , "halt") != 0) {
+        }
+        if(insts[i].instType != 3) // was not dir type
+        {
+            int tmpType; // to recognize the type of instruction
+            insts[i].opCode = op_code_to_int(tmp, &tmpType); // to save opcode in decimal
+            insts[i].instType = tmpType;
+            insts[i].PC = i;
+        }
+        if(strcmp(tmp , "halt") != 0)
+        {
             tmp = strtok(NULL, "\t"); // go to field part
 
             char *rgstrs = strtok(tmp, ","); // to split by ","
 
             //reading fields
-            char *tmpEnd;
+            char *tmpEnd; //temp for strtol function
             switch (insts[i].instType) {
                 case 0: //R_TYPE
                     insts[i].rd = strtol(rgstrs, &tmpEnd, 10);
@@ -240,7 +272,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
                         if (tmpInt != -1)
                             insts[i].imm = tmpInt;
-                        else
+                        else // label is not defined error
                         {
                             struct Error err = {i+1 , 0};
                             write_error(_errors_address , &err);
@@ -263,7 +295,24 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
                         if (tmpInt != -1)
                             insts[i].imm = tmpInt;
-                        else {
+                        else // label is not defined error
+                        {
+                            struct Error err = {i+1 , 4};
+                            write_error(_errors_address , &err);
+                            exit(1);
+                        }
+                    }
+                    break;
+                case 3 :
+                    if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
+                        insts[i].dir = strtol(rgstrs, &tmpEnd, 10); // imm
+                    else // if its label
+                    {
+                        int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
+                        if (tmpInt != -1)
+                            insts[i].dir = tmpInt;
+                        else // label is not defined error
+                        {
                             struct Error err = {i+1 , 4};
                             write_error(_errors_address , &err);
                             exit(1);
@@ -281,8 +330,6 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
             insts[i].opCode = 14;
 
         }
-
-
     }
     return insts;
 }
@@ -443,6 +490,7 @@ void to_machine_code(struct Instruction * inst , int numberOfLines)
 
 void write_output(char * fileName , int numberOfLines , struct Instruction * insts)
 {
+    // erasing the previous file
     FILE * filePtr;
     filePtr = fopen(fileName , "w");
     fprintf(filePtr , "");
@@ -457,13 +505,19 @@ void write_output(char * fileName , int numberOfLines , struct Instruction * ins
         exit(1);
     }
     for(int i = 0 ; i < numberOfLines; i++)
-        fprintf (filePtr ,"%d\n" , (int) insts[i].intInst);
+    {
+        if(insts[i].instType != 3)
+            fprintf(filePtr, "%d\n", (int) insts[i].intInst);
+        else
+            fprintf(filePtr, "%d\n", (int) insts[i].dir); // for the direction
+    }
 
     fclose(filePtr);
 }
 
-    void write_error(char * fileName , struct Error * err)
-    {
+
+void write_error(char * fileName , struct Error * err)
+        {
         FILE * filePtr;
         filePtr = fopen(fileName , "w");
 
@@ -501,6 +555,7 @@ void write_output(char * fileName , int numberOfLines , struct Instruction * ins
         }
         fclose(filePtr);
     }
+
 
 #pragma clang diagnostic pop
 

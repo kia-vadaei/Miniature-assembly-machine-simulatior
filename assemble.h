@@ -1,5 +1,3 @@
-
-
 #ifdef __unix__
 
 #define OS_Windows 0
@@ -50,7 +48,7 @@ struct Map
 };
 
 struct Instruction{
-    size_t instType; // 0 means r type, 1 means i type and 2 means j type
+    size_t instType; // 0 means r type, 1 means i type and 2 means j type and 3 means dir type
     size_t intInst;
     size_t opCode;
     char *mnemonic;
@@ -60,6 +58,7 @@ struct Instruction{
     int rd;
     int imm;
     int PC;
+    int dir;
 };
 
 struct Error
@@ -92,3 +91,5 @@ void write_error(char * , struct Error *);
 char R_TYPE [][10] = {"add" , "sub" , "slt" , "or" , "nand"};
 char I_TYPE [][10] = {"addi" , "ori" , "slti" , "lui" , "lw" , "sw" ,"beq" ,"jalr"};
 char J_TYPE [][10] = {"j" , "halt"};
+char DIR_TYPE[][10]  = {".fill" , ".space"};
+
