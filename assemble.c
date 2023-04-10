@@ -6,13 +6,10 @@
 #include "assemble.h"
 
 
-
-
 int main() {
     if(OS_Windows)
     {
         system("color 06");
-        struct CharArray tmp =  read_assembly_file("file.txt");
 //        printf("%s", labelsMap.strs[0]);
     }
     else
@@ -21,9 +18,11 @@ int main() {
     //show_welcome_message();
     //scanf("->%d");
     //////////////////////////////////////////////////////////////////
+    mkdir("Output");
+    mkdir("Input");
     int numberOfLabels = 0;
     int numberOfLines;
-    struct CharArray strs = read_assembly_file("file.txt");
+    struct CharArray strs = read_assembly_file("Input/file.txt");
 
     numberOfLines = strs.linesNum;
 
@@ -36,15 +35,17 @@ int main() {
 
     to_machine_code(insts , numberOfLines);
 
-    for(int i = 0 ; i < numberOfLines; i++)
-        printf("\n%s : %d\n" , insts[i].inst , (int) insts[i].intInst);
+    write_output(_output_address , numberOfLines , insts);
+
+//    for(int i = 0 ; i < numberOfLines; i++)
+//        printf("\n%s : %d\n" , insts[i].inst , (int) insts[i].intInst);
 
     //printf("%d, %d, %d",insts[6].opCode , insts[6].rs , insts[6].rt);
 
     //printf("\n%c\n" , decimal_to_hex(14)[0]);
 
-
-
+    struct Error tmpErr = {-1,-1};
+    write_error(_errors_address , &tmpErr);
     return 0;
 }
 void show_in_animataion(char * str)
@@ -76,6 +77,7 @@ struct CharArray read_assembly_file(char * fileName)
     if (filePtr == NULL)
     {
         printf("file can't be opened \n");
+
         exit(1);
     }
 
@@ -120,8 +122,10 @@ struct Map * set_labels(int *n , struct CharArray rslt)
 
         if(is_in_map(symbolTable , (*n) , tmp))
         {
-            printf("ERROR");
-            return NULL;
+            //label more than once
+            struct Error err = {i + 1, 1};
+            write_error(_errors_address , &err);
+            exit(1);
         }
             //check that if the tmp string is not in any of r or i or j types
         if(!is_op_code(tmp))
@@ -173,10 +177,17 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
     for(int i = 0 ; i < rslt.linesNum ; ++i)
     {
         char * tmp = strtok(rslt.strs[i], "\t");
-        if (i == 5);
-
         while(!is_op_code(tmp))
+        {
             tmp = strtok(NULL, "\t");
+
+            if(tmp == NULL)
+            {
+                struct Error err = {i+1 , 3};
+                write_error(_errors_address , &err);
+                exit(1);
+            }
+        }
 
         int tmpType; // to recognize the type of instruction
         insts[i].opCode = op_code_to_int(tmp , &tmpType); // to save opcode in decimal
@@ -201,7 +212,8 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
 
                     if(insts[i].rd > 15 || insts[i].rs > 15 || insts[i].rt > 15)
                     {
-                        printf("ERROR");
+                        struct Error err = {i+1 , 4};
+                        write_error(_errors_address , &err);
                         exit(1);
                     }
                     break;
@@ -212,27 +224,38 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                     insts[i].rs = strtol(rgstrs, &tmpEnd, 10);//rs
                     rgstrs = strtok(NULL, ",");//next one
 
-                    if (rgstrs[0] >= '0' && rgstrs[0] <= '9') // if its number
+                    if (rgstrs[0] >= '0' && rgstrs[0] <= '9' || rgstrs[0] == '-') // if its number
+                    {
                         insts[i].imm = strtol(rgstrs, &tmpEnd, 10); // imm
+                        if(abs(insts[i].imm) > 65535)
+                        {
+                            struct Error err = {i+1 , 2};
+                            write_error(_errors_address , &err);
+                            exit(1);
+                        }
+                    }
                         //addi $2,$4,6
                     else // if its label
                     {
                         int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
                         if (tmpInt != -1)
                             insts[i].imm = tmpInt;
-                        else {
-                            printf("ERROR");
+                        else
+                        {
+                            struct Error err = {i+1 , 0};
+                            write_error(_errors_address , &err);
                             exit(1);
                         }
                     }
                     if(insts[i].rs > 15 || insts[i].rt > 15)
                     {
-                        printf("ERROR");
+                        struct Error err = {i+1 , 4};
+                        write_error(_errors_address, &err);
                         exit(1);
                     }
                     break;
                 case 2:
-                    if (rgstrs[0] >= '0' && rgstrs[0] <= '9') // if its number
+                    if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
                         insts[i].imm = strtol(rgstrs, &tmpEnd, 10); // imm
 
                     else // if its label
@@ -241,13 +264,13 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         if (tmpInt != -1)
                             insts[i].imm = tmpInt;
                         else {
-                            printf("ERROR");
+                            struct Error err = {i+1 , 4};
+                            write_error(_errors_address , &err);
                             exit(1);
                         }
                     }
                     break;
                 default:
-                    printf("Error");
                     exit(1);
                     break;
 
@@ -418,7 +441,66 @@ void to_machine_code(struct Instruction * inst , int numberOfLines)
     }
 }
 
+void write_output(char * fileName , int numberOfLines , struct Instruction * insts)
+{
+    FILE * filePtr;
+    filePtr = fopen(fileName , "w");
+    fprintf(filePtr , "");
+    fclose(filePtr);
 
+    filePtr = fopen(fileName , "a");
+
+    //to check if file does not exist
+    if (filePtr == NULL)
+    {
+        printf("file can't be opened \n");
+        exit(1);
+    }
+    for(int i = 0 ; i < numberOfLines; i++)
+        fprintf (filePtr ,"%d\n" , (int) insts[i].intInst);
+
+    fclose(filePtr);
+}
+
+    void write_error(char * fileName , struct Error * err)
+    {
+        FILE * filePtr;
+        filePtr = fopen(fileName , "w");
+
+        int i = 0; // array counter
+
+        //to check if file does not exist
+        if (filePtr == NULL)
+        {
+            printf("file can't be opened \n");
+            exit(1);
+        }
+
+        switch (err->errorCode)
+        {
+            case 0:
+                fprintf(filePtr , "Process finished with exit code 1.\n\n--> Undefined label in line %d !" , err->line);
+                break;
+            case 1:
+                fprintf(filePtr , "Process finished with exit code 1.\n\n--> The label defined in line %d has been defined more than once !" , err->line);
+                break;
+            case 2:
+                fprintf(filePtr , "Process finished with exit code 1.\n\n--> The offset defined in line %d overflows the 16 bits !" , err->line);
+                break;
+            case 3:
+                fprintf(filePtr , "Process finished with exit code 1.\n\n--> Undefined opcode in line %d !" , err->line);
+
+                break;
+            case 4:
+                fprintf(filePtr , "Process finished with exit code 1.\n\n--> Wrong register called in line %d !" , err->line);
+                break;
+            default:
+                fprintf(filePtr , "Process finished with exit code 0.");
+
+                break;
+        }
+        fclose(filePtr);
+    }
 
 #pragma clang diagnostic pop
 

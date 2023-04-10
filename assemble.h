@@ -12,6 +12,8 @@
     #include <time.h>
     #include <math.h>
     #include "Structs.c"
+    #include <sys/types.h>
+    #include <sys/stat.h>
 
 #elif defined(_WIN32) || defined(WIN32)
 
@@ -22,6 +24,8 @@
 #include <tchar.h>
 #include <time.h>
 #include <math.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 //#include "assemble.h"
 
@@ -29,6 +33,9 @@
 #define WIDTH 7
 
 #endif
+
+#define _output_address "Output/output.txt"
+#define _errors_address "Output/error.txt"
 
 struct CharArray
 {
@@ -55,6 +62,12 @@ struct Instruction{
     int PC;
 };
 
+struct Error
+{
+    int line;
+    int errorCode; // 0 is for the undefined label / 1 is for more than one use for a label / 2 is for offset overflow / 3 is for undefined opcode.
+};
+
 //functions
 void show_welcome_message();
 void show_in_animataion(char *);
@@ -74,6 +87,8 @@ void to_machine_code(struct Instruction * , int);
 
 struct Instruction * set_each_line_inst(int  , struct Map* , struct CharArray );
 
+void write_output(char * , int , struct Instruction * );
+void write_error(char * , struct Error *);
 char R_TYPE [][10] = {"add" , "sub" , "slt" , "or" , "nand"};
 char I_TYPE [][10] = {"addi" , "ori" , "slti" , "lui" , "lw" , "sw" ,"beq" ,"jalr"};
 char J_TYPE [][10] = {"j" , "halt"};
