@@ -17,14 +17,14 @@ The details of the instructions of this microprocessor are given in Table 1 and 
 
 <div dir='ltr' align="center">
   </br>
-  <img src="https://s28.picofile.com/file/8462127042/Screenshot_2023_04_13_155250.png"  width="500"/>
-  <img src="https://s29.picofile.com/file/8462127068/qwe.png"  width="300" height="305"/>
+  <img src="https://s28.picofile.com/file/8462127968/sdaf.png"  width="500" height="324" />
+  <img src="https://s29.picofile.com/file/8462127068/qwe.png"  width="300" height="324"/>
 </div>
-
-
+</br>
 This project has 2 parts, both of which are equally important. The first part is design and implementation of assembler and the second part is testing and verification
 Assembler written.
 </br>
+
 + Designing and implementing an assembler in C language: for this machine, design and implement an assembler in C language that the name of the instructions of this
 Convert microprocessors that are in assembly language to their binary equivalent. In addition, this assembler should include the tags that are used when writing the     program in the language
 An assembly is used to convert them into their address equivalent.
@@ -54,7 +54,7 @@ Face fewer problems in designing and implementing assembler for Miniature.
 <div dir='ltr' align="center">
   <img src="https://s29.picofile.com/file/8462127892/as.png"  width="500"/>
 </div>
-
+</br>
 
 + Running the assembler: Write the assembler in such a way that it receives two arguments in the command line (Line Command, as follows).
 assemble program.as program.mc
