@@ -12,7 +12,9 @@ int main() {
     } else
         printf("This is Linux\n");
 
-    //show_welcome_message();
+    show_welcome_message();
+    mkdir("Output");
+    mkdir("Input");
 
     //////////////////////////////////////////////////////////////////
     while (1) {
@@ -43,8 +45,6 @@ int main() {
 
 
 
-        mkdir("Output");
-        mkdir("Input");
 
         int numberOfLabels = 0;
         int numberOfLines;
