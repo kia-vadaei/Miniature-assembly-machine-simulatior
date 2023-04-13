@@ -7,67 +7,65 @@
 
 
 int main() {
-    if(OS_Windows)
-    {
+    if (OS_Windows) {
         system("color 06");
-    }
-    else
+    } else
         printf("This is Linux\n");
 
     //show_welcome_message();
 
     //////////////////////////////////////////////////////////////////
-
-    char inst[50];
-    printf("%s" , ">> ");
-    gets(inst);
-
-    char * tmpInst = strtok(inst, " ");
-
-    //printf("%s",ordr);
-
-    while(strcmp(tmpInst , "assemble"))
-    {
-        printf("To assemble a file, please use the instruction \"assemble input.ac , output.mc\".\n>> ");
+    while (1) {
+        char inst[50];
+        printf("%s", "\t\t\t\t\t>> ");
         gets(inst);
-        tmpInst = strtok(inst, " ");
+
+        char *tmpInst = strtok(inst, " ");
+
+        //printf("%s",ordr);
+
+        while (strcmp(tmpInst, "assemble")) {
+            printf("\n\t\t\t\t\tTo assemble a file, please usethe instruction\n\t\t\t\t\t\t\b\b\"assemble input.ac , output.mc\".\n\n\t\t\t\t\t>> ");
+            gets(inst);
+            tmpInst = strtok(inst, " ");
+        }
+        tmpInst = strtok(NULL, " ");
+        char tmpInput[50], tmpOutput[50];
+        char inputFileName[50] = "Input/", outputFileName[50] = "Output/";
+        strcpy(tmpInput, tmpInst);
+        strcat(inputFileName, tmpInput);
+
+        tmpInst = strtok(NULL, " ");
+        strcpy(tmpOutput, tmpInst);
+        strcat(outputFileName, tmpOutput);
+
+        //////////////////////////////////////////////////////////////////
+
+
+
+        mkdir("Output");
+        mkdir("Input");
+
+        int numberOfLabels = 0;
+        int numberOfLines;
+
+        struct CharArray strs = read_assembly_file(inputFileName);
+
+        numberOfLines = strs.linesNum;
+
+        struct Map *labelsMap = set_labels(&numberOfLabels, strs);
+
+        struct Instruction *insts = set_each_line_inst(numberOfLabels, labelsMap, strs);
+
+        to_machine_code(insts, numberOfLines);
+
+        write_output(outputFileName, numberOfLines, insts);
+
+        struct Error tmpErr = {-1, -1};
+        write_error(_errors_address, &tmpErr);
+
+        printf("\n\t\t\t\t\t%s was Assembled successfully...\n\n" , tmpInput);
     }
-    tmpInst = strtok(NULL, " ");
-    char tmpInput[50] , tmpOutput[50];
-    char inputFileName[50] = "Input/" , outputFileName [50] = "Output/";
-    strcpy(tmpInput , tmpInst);
-    strcat(inputFileName , tmpInput);
-
-    tmpInst = strtok(NULL, " ");
-    strcpy(tmpOutput , tmpInst);
-    strcat(outputFileName , tmpOutput);
-
-    //////////////////////////////////////////////////////////////////
-
-
-
-    mkdir("Output");
-    mkdir("Input");
-
-    int numberOfLabels = 0;
-    int numberOfLines;
-
-    struct CharArray strs = read_assembly_file(inputFileName);
-
-    numberOfLines = strs.linesNum;
-
-    struct Map * labelsMap = set_labels(&numberOfLabels, strs);
-
-    struct Instruction * insts = set_each_line_inst(numberOfLabels , labelsMap , strs);
-
-    to_machine_code(insts , numberOfLines);
-
-    write_output(outputFileName , numberOfLines , insts);
-
-    struct Error tmpErr = {-1,-1};
-    write_error(_errors_address , &tmpErr);
-
-    scanf("");
     return 0;
 }
 void show_in_animataion(char * str)
@@ -75,14 +73,14 @@ void show_in_animataion(char * str)
     for(int i = 0 ; i < strlen(str) ; ++i)
     {
         printf("%c" , str[i]);
-        Sleep(90);
+        Sleep(40);
     }
 }
 
 void show_welcome_message()
 {
     show_in_animataion("\n\n\t\t\t\t\tWELCOME TO MINIATURE ASSEMBLER SIMULATION!\n\t\t\t\t\tTO START YOU SHOULD USE THE COMMAND "
-                       "BELLOW:\n\t\t\t\t\t---> ASSEMBLY INPUT_FILE.AC OUTPUT_FILE.MC\n\n\t\t\t\t\t");
+                       "BELLOW :\n\t\t\t\t\t--> ASSEMBLY INPUT_FILE.AC OUTPUT_FILE.MC\n\n");
     Sleep(500);
 }
 struct CharArray read_assembly_file(char * fileName)
@@ -99,7 +97,8 @@ struct CharArray read_assembly_file(char * fileName)
     if (filePtr == NULL)
     {
         printf("file can't be opened \n");
-
+        printf("\n\t\t\t\t\t\tERROR");
+        Sleep(2000);
         exit(1);
     }
 
@@ -136,17 +135,21 @@ boolean is_in_map(struct Map * lables , int n , char * key)
 }
 struct Map * set_labels(int *n , struct CharArray rslt)
 {
+
     struct Map * symbolTable = malloc(sizeof (struct Map) * 100);
     for(int i = 0 ; i < rslt.linesNum ;++i)
     {
         // Extract the first one
         char * tmp = strtok(rslt.strs[i], "\t");
-
+        if(!strcmp(tmp , ".fill"))
+            continue;
         if(is_in_map(symbolTable , (*n) , tmp))
         {
             //label more than once
             struct Error err = {i + 1, 1};
             write_error(_errors_address , &err);
+            printf("\n\t\t\t\t\t\tERROR");
+            Sleep(2000);
             exit(1);
         }
             //check that if the tmp string is not in any of r or i or j types
@@ -198,6 +201,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
     struct Instruction * insts = malloc(sizeof (struct Instruction) * 200);
     for(int i = 0 ; i < rslt.linesNum ; ++i)
     {
+        if(i == 6);
         char * tmp = strtok(rslt.strs[i], "\t");
         while(!is_op_code(tmp))
         {
@@ -209,10 +213,15 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
             }
             tmp = strtok(NULL, "\t");
 
+            if(tmp[strlen(tmp) - 1] == '\n')
+                tmp[strlen(tmp) - 1] = '\0';
+
             if(tmp == NULL)
             {
                 struct Error err = {i+1 , 3};
                 write_error(_errors_address , &err);
+                printf("\n\t\t\t\t\t\tERROR");
+                Sleep(2000);
                 exit(1);
             }
 
@@ -246,45 +255,63 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                     {
                         struct Error err = {i+1 , 4};
                         write_error(_errors_address , &err);
+                        printf("\n\t\t\t\t\t\tERROR");
+                        Sleep(2000);
                         exit(1);
                     }
                     break;
                 case 1: // I_TYPE
                     insts[i].rt = strtol(rgstrs, &tmpEnd, 10); //rt
                     rgstrs = strtok(NULL, ",");//next one
+                    if(insts[i].opCode != 8) //lui
+                        insts[i].rs = strtol(rgstrs, &tmpEnd, 10);//rs
+                    else
+                        insts[i].rs = 0; // lui
 
-                    insts[i].rs = strtol(rgstrs, &tmpEnd, 10);//rs
-                    rgstrs = strtok(NULL, ",");//next one
-
-                    if (rgstrs[0] >= '0' && rgstrs[0] <= '9' || rgstrs[0] == '-') // if its number
+                    if(insts[i].opCode !=12 )//jalr
                     {
-                        insts[i].imm = strtol(rgstrs, &tmpEnd, 10); // imm
-                        if(abs(insts[i].imm) > 65535)
+                        if(insts[i].opCode != 8) //not lui
+                            rgstrs = strtok(NULL, ",");//next one
+
+                        if(tmp[strlen(rgstrs) - 1] == '\n')
+                            tmp[strlen(rgstrs) - 1] = '\0';
+
+                        if (rgstrs[0] >= '0' && rgstrs[0] <= '9' || rgstrs[0] == '-') // if its number
                         {
-                            struct Error err = {i+1 , 2};
-                            write_error(_errors_address , &err);
+                            insts[i].imm = strtol(rgstrs, &tmpEnd, 10); // imm
+                            if (abs(insts[i].imm) > 65535) {
+                                struct Error err = {i + 1, 2};
+                                write_error(_errors_address, &err);
+                                printf("\n\t\t\t\t\t\tERROR");
+                                Sleep(2000);
+                                exit(1);
+                            }
+                        }
+                            //addi $2,$4,6
+                        else // if its label
+                        {
+                            int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
+                            if (tmpInt != -1)
+                                insts[i].imm = tmpInt;
+                            else // label is not defined error
+                            {
+                                struct Error err = {i + 1, 0};
+                                write_error(_errors_address, &err);
+                                printf("\n\t\t\t\t\t\tERROR");
+                                Sleep(2000);
+                                exit(1);
+                            }
+                        }
+                        if (insts[i].rs > 15 || insts[i].rt > 15) {
+                            struct Error err = {i + 1, 4};
+                            write_error(_errors_address, &err);
+                            printf("\n\t\t\t\t\t\tERROR");
+                            Sleep(2000);
                             exit(1);
                         }
                     }
-                        //addi $2,$4,6
-                    else // if its label
-                    {
-                        int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
-                        if (tmpInt != -1)
-                            insts[i].imm = tmpInt;
-                        else // label is not defined error
-                        {
-                            struct Error err = {i+1 , 0};
-                            write_error(_errors_address , &err);
-                            exit(1);
-                        }
-                    }
-                    if(insts[i].rs > 15 || insts[i].rt > 15)
-                    {
-                        struct Error err = {i+1 , 4};
-                        write_error(_errors_address, &err);
-                        exit(1);
-                    }
+                    else
+                        insts[i].imm = 0;
                     break;
                 case 2:
                     if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
@@ -299,6 +326,8 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         {
                             struct Error err = {i+1 , 4};
                             write_error(_errors_address , &err);
+                            printf("\n\t\t\t\t\t\tERROR");
+                            Sleep(2000);
                             exit(1);
                         }
                     }
@@ -315,11 +344,15 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         {
                             struct Error err = {i+1 , 4};
                             write_error(_errors_address , &err);
+                            printf("\n\t\t\t\t\t\tERROR");
+                            Sleep(2000);
                             exit(1);
                         }
                     }
                     break;
                 default:
+                    printf("\n\t\t\t\t\t\tERROR");
+                    Sleep(2000);
                     exit(1);
                     break;
 
@@ -502,6 +535,8 @@ void write_output(char * fileName , int numberOfLines , struct Instruction * ins
     if (filePtr == NULL)
     {
         printf("file can't be opened \n");
+        printf("\n\t\t\t\t\t\tERROR");
+        Sleep(2000);
         exit(1);
     }
     for(int i = 0 ; i < numberOfLines; i++)
@@ -519,7 +554,7 @@ void write_output(char * fileName , int numberOfLines , struct Instruction * ins
 void write_error(char * fileName , struct Error * err)
         {
         FILE * filePtr;
-        filePtr = fopen(fileName , "w");
+        filePtr = fopen(fileName , "a");
 
         int i = 0; // array counter
 
@@ -527,6 +562,8 @@ void write_error(char * fileName , struct Error * err)
         if (filePtr == NULL)
         {
             printf("file can't be opened \n");
+            printf("\n\t\t\t\t\t\tERROR");
+            Sleep(2000);
             exit(1);
         }
 
@@ -553,7 +590,8 @@ void write_error(char * fileName , struct Error * err)
 
                 break;
         }
-        fclose(filePtr);
+            fprintf(filePtr , "\n\n################################\n\n");
+            fclose(filePtr);
     }
 
 
