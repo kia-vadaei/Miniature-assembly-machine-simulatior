@@ -10,6 +10,9 @@
 </div>
 
 
+</br>
+<h1>Miniature</h1>
+
 <div dir='ltr' align="justify">
 In this project, you are asked to write an assembler for a simple microprocessor called Miniature. The features of this microprocessor are as follows:
 A) This processor is a 32-bit machine (each word is 32 bits).
