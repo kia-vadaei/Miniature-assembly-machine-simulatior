@@ -1,3 +1,15 @@
+<div dir='rtl' align="center">
+             
+</br>   
+<img src="https://s28.picofile.com/file/8462130392/uni.png"  width="250"/>
+
+<h2>🔷 UNIVERSITY OF ISFAHAN 🔷</h2>
+<h3>LANGUAGES AND AUTOMATA THEORY COURSE</h3>
+              <h3>AUTHOR:</h3>
+          <h3>KIANOOSH VADAEI</h3>
+</div>
+
+
 <div dir='ltr' align="justify">
 In this project, you are asked to write an assembler for a simple microprocessor called Miniature. The features of this microprocessor are as follows:
 A) This processor is a 32-bit machine (each word is 32 bits).
