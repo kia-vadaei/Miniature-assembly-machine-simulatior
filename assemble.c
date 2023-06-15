@@ -11,10 +11,10 @@ int main() {
         system("color 06");
     } else
         printf("This is Linux\n");
-
-    show_welcome_message();
     mkdir("Output");
     mkdir("Input");
+    show_welcome_message();
+
 
     //////////////////////////////////////////////////////////////////
     while (1) {
