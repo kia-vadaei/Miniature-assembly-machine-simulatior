@@ -1,0 +1,10 @@
+	lw	1,0,val
+	addi	1,1,500
+loop	beq	1,0,loop
+	sw	3,4,5
+val	.fill	56
+	ori	3,2,13
+	slti	3,4,41
+	sub	1,1,1
+	j	end
+end	halt

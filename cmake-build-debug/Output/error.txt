@@ -1,0 +1,108 @@
+Process finished with exit code 1.
+
+--> Undefined opcode in line 7 !
+
+################################
+
+Process finished with exit code 1.
+
+--> Undefined opcode in line 7 !
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 1.
+
+--> The label defined in line 2 has been defined more than once !
+
+################################
+
+Process finished with exit code 1.
+
+--> The label defined in line 2 has been defined more than once !
+
+################################
+
+Process finished with exit code 1.
+
+--> The label defined in line 2 has been defined more than once !
+
+################################
+
+Process finished with exit code 1.
+
+--> The label defined in line 2 has been defined more than once !
+
+################################
+
+Process finished with exit code 1.
+
+--> The label defined in line 2 has been defined more than once !
+
+################################
+
+Process finished with exit code 1.
+
+--> The label defined in line 2 has been defined more than once !
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+
+Process finished with exit code 0.
+
+################################
+

@@ -1,0 +1,9 @@
+	.fill	7
+	.fill	543
+start	add	1,2,9
+	beq	1,2,start
+	j	end
+	lui	1,45
+end	halt
+	nand	1,3,5
+	ori	3,5,45

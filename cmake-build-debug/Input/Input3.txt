@@ -1,0 +1,11 @@
+	addi	1,1,500
+	sw	1,0,tmp
+loop	lui	1,200
+	sw	3,4,5
+tmp	.fill	56
+	.fill	502132
+	nand	3,2,13
+	slti	3,4,41
+	add	1,1,1
+	j	end
+end	halt
