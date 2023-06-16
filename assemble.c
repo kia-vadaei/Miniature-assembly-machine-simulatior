@@ -7,6 +7,7 @@
 
 
 int main() {
+
     if (OS_Windows) {
         system("color 06");
     } else
@@ -28,7 +29,7 @@ int main() {
         //printf("%s",ordr);
 
         while (strcmp(tmpInst, "assemble")) {
-            printf("\n\t\t\t\t\tTo assemble a file, please usethe instruction\n\t\t\t\t\t\t\b\b\"assemble input.ac , output.mc\".\n\n\t\t\t\t\t>> ");
+            printf("\n\t\t\t\t\tTo assemble a file, please use the instruction\n\t\t\t\t\t\t\b\b\"assemble input.txt , output.mc\".\n\n\t\t\t\t\t>> ");
             gets(inst);
             tmpInst = strtok(inst, " ");
         }
@@ -38,10 +39,11 @@ int main() {
         strcpy(tmpInput, tmpInst);
         strcat(inputFileName, tmpInput);
 
-        tmpInst = strtok(NULL, " ");
+        tmpInst = strtok(NULL, " , ");
         strcpy(tmpOutput, tmpInst);
         strcat(outputFileName, tmpOutput);
 
+        strcpy(globalInputFile , tmpInput); // to copy the input file name in global input
         //////////////////////////////////////////////////////////////////
 
 
@@ -66,6 +68,8 @@ int main() {
         write_error(_errors_address, &tmpErr);
 
         printf("\n\t\t\t\t\t%s was Assembled successfully...\n\n" , tmpInput);
+        hasError = 0;
+
     }
     return 0;
 }
@@ -81,7 +85,7 @@ void show_in_animataion(char * str)
 void show_welcome_message()
 {
     show_in_animataion("\n\n\t\t\t\t\tWELCOME TO MINIATURE ASSEMBLER SIMULATION!\n\t\t\t\t\tTO START YOU SHOULD USE THE COMMAND "
-                       "BELLOW :\n\t\t\t\t\t--> ASSEMBLY INPUT_FILE.AC OUTPUT_FILE.MC\n\n");
+                       "BELLOW :\n\t\t\t\t\t--> ASSEMBLE INPUT_FILE.TXT , OUTPUT_FILE.MC\n\n");
     Sleep(500);
 }
 struct CharArray read_assembly_file(char * fileName)
@@ -97,10 +101,12 @@ struct CharArray read_assembly_file(char * fileName)
     //to check if file does not exist!
     if (filePtr == NULL)
     {
-        printf("file can't be opened \n");
+        printf("\n\t\t\t\t\tfile can't be opened \n");
         printf("\n\t\t\t\t\t\tERROR");
         Sleep(2000);
-        exit(1);
+        clearConsole();
+        hasError = 1;
+        main();
     }
 
     int bufferLength = 255;
@@ -151,7 +157,9 @@ struct Map * set_labels(int *n , struct CharArray rslt)
             write_error(_errors_address , &err);
             printf("\n\t\t\t\t\t\tERROR");
             Sleep(2000);
-            exit(1);
+            clearConsole();
+            hasError = 1;
+            main();
         }
             //check that if the tmp string is not in any of r or i or j types
         if(!is_op_code(tmp))
@@ -223,7 +231,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                 write_error(_errors_address , &err);
                 printf("\n\t\t\t\t\t\tERROR");
                 Sleep(2000);
-                exit(1);
+                clearConsole();
+                hasError = 1;
+                main();
             }
 
         }
@@ -258,7 +268,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         write_error(_errors_address , &err);
                         printf("\n\t\t\t\t\t\tERROR");
                         Sleep(2000);
-                        exit(1);
+                        clearConsole();
+                        hasError = 1;
+                        main();
                     }
                     break;
                 case 1: // I_TYPE
@@ -285,7 +297,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                                 write_error(_errors_address, &err);
                                 printf("\n\t\t\t\t\t\tERROR");
                                 Sleep(2000);
-                                exit(1);
+                                clearConsole();
+                                hasError = 1;
+                                main();
                             }
                         }
                             //addi $2,$4,6
@@ -300,7 +314,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                                 write_error(_errors_address, &err);
                                 printf("\n\t\t\t\t\t\tERROR");
                                 Sleep(2000);
-                                exit(1);
+                                clearConsole();
+                                hasError = 1;
+                                main();
                             }
                         }
                         if (insts[i].rs > 15 || insts[i].rt > 15) {
@@ -308,7 +324,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                             write_error(_errors_address, &err);
                             printf("\n\t\t\t\t\t\tERROR");
                             Sleep(2000);
-                            exit(1);
+                            clearConsole();
+                            hasError = 1;
+                            main();
                         }
                     }
                     else
@@ -329,9 +347,12 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                             write_error(_errors_address , &err);
                             printf("\n\t\t\t\t\t\tERROR");
                             Sleep(2000);
-                            exit(1);
+                            clearConsole();
+                            hasError = 1;
+                            main();
                         }
                     }
+                    insts[i].target = insts[i].imm;
                     break;
                 case 3 :
                     if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
@@ -347,14 +368,18 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                             write_error(_errors_address , &err);
                             printf("\n\t\t\t\t\t\tERROR");
                             Sleep(2000);
-                            exit(1);
+                            clearConsole();
+                            hasError = 1;
+                            main();
                         }
                     }
                     break;
                 default:
                     printf("\n\t\t\t\t\t\tERROR");
                     Sleep(2000);
-                    exit(1);
+                    clearConsole();
+                    hasError = 1;
+                    main();
                     break;
 
             }
@@ -537,8 +562,10 @@ void write_output(char * fileName , int numberOfLines , struct Instruction * ins
     {
         printf("file can't be opened \n");
         printf("\n\t\t\t\t\t\tERROR");
-        Sleep(2000);
-        exit(1);
+        Sleep(5000);
+        clearConsole();
+        hasError = 1;
+        main();
     }
     for(int i = 0 ; i < numberOfLines; i++)
     {
@@ -565,29 +592,31 @@ void write_error(char * fileName , struct Error * err)
             printf("file can't be opened \n");
             printf("\n\t\t\t\t\t\tERROR");
             Sleep(2000);
-            exit(1);
+            clearConsole();
+            hasError = 1;
+            main();
         }
 
         switch (err->errorCode)
         {
             case 0:
-                fprintf(filePtr , "Process finished with exit code 1.\n\n--> Undefined label in line %d !" , err->line);
+                fprintf(filePtr , "%s Process finished with exit code 1.\n\n--> Undefined label in line %d !" , globalInputFile , err->line);
                 break;
             case 1:
-                fprintf(filePtr , "Process finished with exit code 1.\n\n--> The label defined in line %d has been defined more than once !" , err->line);
+                fprintf(filePtr , "%s Process finished with exit code 1.\n\n--> The label defined in line %d has been defined more than once !" , globalInputFile, err->line);
                 break;
             case 2:
-                fprintf(filePtr , "Process finished with exit code 1.\n\n--> The offset defined in line %d overflows the 16 bits !" , err->line);
+                fprintf(filePtr , "%s Process finished with exit code 1.\n\n--> The offset defined in line %d overflows the 16 bits !" , globalInputFile, err->line);
                 break;
             case 3:
-                fprintf(filePtr , "Process finished with exit code 1.\n\n--> Undefined opcode in line %d !" , err->line);
+                fprintf(filePtr , "%s Process finished with exit code 1.\n\n--> Undefined opcode in line %d !" , globalInputFile, err->line);
 
                 break;
             case 4:
-                fprintf(filePtr , "Process finished with exit code 1.\n\n--> Wrong register called in line %d !" , err->line);
+                fprintf(filePtr , "%s Process finished with exit code 1.\n\n--> Wrong register called in line %d !" , globalInputFile, err->line);
                 break;
             default:
-                fprintf(filePtr , "Process finished with exit code 0.");
+                fprintf(filePtr , "%s Process finished with exit code 0." , globalInputFile);
 
                 break;
         }

@@ -1,4 +1,4 @@
-	lw	1,0,val
+	lw	1,0,vaal
 	addi	1,1,500
 loop	beq	1,0,loop
 	sw	3,4,5
