@@ -12,6 +12,7 @@
     #include "Structs.c"
     #include <sys/types.h>
     #include <sys/stat.h>
+#include "run.c"
     #define clearConsole() printf("\033[H\033[J")
 
 #elif defined(_WIN32) || defined(WIN32)
@@ -25,6 +26,7 @@
 #include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "run.c"
 
 #define clearConsole() system("cls")
 
@@ -52,7 +54,6 @@ struct Instruction{
     size_t instType; // 0 means r type, 1 means i type and 2 means j type and 3 means dir type
     size_t intInst;
     size_t opCode;
-    char *mnemonic;
     char inst[9];
     int rs;
     int rt;
