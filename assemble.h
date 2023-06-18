@@ -12,6 +12,7 @@
     #include "Structs.c"
     #include <sys/types.h>
     #include <sys/stat.h>
+    #define clearConsole() printf("\033[H\033[J")
 
 #elif defined(_WIN32) || defined(WIN32)
 
@@ -25,16 +26,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-//#include "assemble.h"
-
-#define DIV 1048576
-#define WIDTH 7
+#define clearConsole() system("cls")
 
 #endif
 
-#define _output_address "Output/output.txt"
+//////////////////////////////////////////////////////////////////GLOBALS
 #define _errors_address "Output/error.txt"
+char globalInputFile[50];
+boolean hasError;
 
+///////////////////////////////////////////////////////////////////
 struct CharArray
 {
     char strs[500][255];
@@ -56,7 +57,11 @@ struct Instruction{
     int rs;
     int rt;
     int rd;
+    int rsVal;
+    int rtVal;
+    int rdVal;
     int imm;
+    int target;
     int PC;
     int dir;
 };
