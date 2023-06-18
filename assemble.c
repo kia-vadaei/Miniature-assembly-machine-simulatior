@@ -331,8 +331,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                     }
                     else
                         insts[i].imm = 0;
+                    insts[i].rd = -1;
                     break;
-                case 2:
+                case 2: //J_TYPE
                     if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
                         insts[i].imm = strtol(rgstrs, &tmpEnd, 10); // imm
 
@@ -353,6 +354,10 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         }
                     }
                     insts[i].target = insts[i].imm;
+                    insts[i].rs = -1;
+                    insts[i].rt = -1;
+                    insts[i].rd = -1;
+
                     break;
                 case 3 :
                     if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
@@ -373,6 +378,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                             main();
                         }
                     }
+                    insts[i].rs = -1;
+                    insts[i].rt = -1;
+                    insts[i].rd = -1;
                     break;
                 default:
                     printf("\n\t\t\t\t\t\tERROR");
