@@ -19,7 +19,21 @@ static struct RegisterFile registerFile = {
 
 static  struct Memory memory;
 
+struct Signals
+{
+    int RegDest;
+    int Jump;
+    int Branch;
+    int MemRead;
+    int MemToReg;
+    int ALUOp;
+    int MemWrite;
+    int ALUSrc;
+    int RegWrite;
+    int Jalr;
+    int Halt;
+    int Upper;
 
-
+};
 
 #endif //MINIATURE_ASSEMBLY_MACHINE_SIMULATIOR_RUN_H
