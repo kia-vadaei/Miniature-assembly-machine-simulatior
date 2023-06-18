@@ -159,8 +159,8 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
                 return 0;
         case 7:     //ori
             *zero = 0;
-            RD1 = decimal2binary(readData1);
-            RD2 = decimal2binary(readData2);
+            RD1 = decimal2binary(abs(readData1));
+            RD2 = decimal2binary(abs(readData2));
 
             for(int i = 0; i < 32; i++)
                 RD1[i] = RD1[i] | RD2[i];
@@ -182,3 +182,68 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
 
     }
 }
+
+struct Signals * ControlUnit(struct Instruction * inst)
+{
+    struct Signals * signals;
+    if(inst->instType == 0) // R-TYPE
+        signals->RegDest = 1;
+    else
+        signals->RegDest = 0;
+
+    if(inst->opCode == 13) //jump
+        signals->Jump = 1;
+    else
+        signals->Jump = 0;
+
+    if(inst->instType == 11)
+        signals->Branch = 1;
+    else
+        signals->Branch = 0;
+
+    if(inst->opCode == 9) //lw
+        signals->MemRead = 1;
+    else
+        signals->MemRead = 0;
+
+    if(inst->opCode == 9) //lw
+        signals->MemToReg = 1;
+    else
+        signals->MemToReg = 0;
+
+    signals->ALUOp = inst->opCode;
+
+    if(inst->opCode == 10) //sw
+        signals->MemWrite = 1;
+    else
+        signals->MemWrite = 0;
+
+    if(inst->instType == 0 || inst->opCode == 12) //R-TYPE
+        signals->ALUSrc = 0;
+    else if(inst->instType == 1 && inst->opCode != 12) //I-TYPE and not jalr
+        signals->ALUSrc = 1;
+
+    if(inst->opCode != 10 || inst->opCode != 13 || inst->opCode != 14)
+        signals->RegWrite = 1;
+    else
+        signals->RegWrite = 0;
+
+    if(inst->opCode == 12)
+        signals->Jalr = 1;
+    else
+        signals->Jalr = 0;
+
+    if(inst->opCode == 14)
+        signals->Halt = 1;
+    else
+        signals->Halt = 1;
+
+    if(inst->opCode == 8)
+        signals->Upper = 1;
+    else
+        signals->Upper = 0;
+
+
+    return  signals;
+}
+
