@@ -97,8 +97,8 @@ int main() {
             instForRun =  fetch(insts , pc);
             instForRun = decode(instForRun, &registerFile);
             pc = execution(instForRun , &registerFile);
-
         }
+
 
     }
     return 0;
