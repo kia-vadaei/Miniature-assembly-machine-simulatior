@@ -12,7 +12,8 @@
     #include "Structs.c"
     #include <sys/types.h>
     #include <sys/stat.h>
-#include "run.c"
+//
+//#include "run.c"
     #define clearConsole() printf("\033[H\033[J")
 
 #elif defined(_WIN32) || defined(WIN32)
@@ -26,7 +27,6 @@
 #include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "run.c"
 
 #define clearConsole() system("cls")
 
@@ -98,4 +98,16 @@ char R_TYPE [][10] = {"add" , "sub" , "slt" , "or" , "nand"};
 char I_TYPE [][10] = {"addi" , "ori" , "slti" , "lui" , "lw" , "sw" ,"beq" ,"jalr"};
 char J_TYPE [][10] = {"j" , "halt"};
 char DIR_TYPE[][10]  = {".fill" , ".space"};
+
+
+
+
+
+
+
+
+
+
+
+
 
