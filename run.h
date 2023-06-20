@@ -68,6 +68,13 @@ struct Memory memory;
 
 
 
+
+
+
+
+
+
+
 int * decimal2binary(int number)
 {
     // array to store binary number
@@ -315,6 +322,24 @@ struct Signals * ControlUnit(struct Instruction * inst)
     return  signals;
 }
 
+void memoryState(struct Instruction * inst , struct RegisterFile * registerFile , struct  Signals* signals , int * readDataFromMem , int ALUResult)
+{
+    if(signals->MemRead)
+        *readDataFromMem = memory.memory[ALUResult];
+    if(signals->MemWrite)
+    {
+        memory.memory[ALUResult] = inst->rtVal;
+        *readDataFromMem = memory.memory[ALUResult];
+    }
+}
+
+void writeBack(struct RegisterFile * registerFile , struct  Signals* signals , int writeReg , int writeData)
+{
+    if(signals->RegWrite)
+        registerFile->registers[writeReg] = writeData;
+}
+
+
 int execution(struct Instruction * inst , struct RegisterFile * registerFile)    //returns PC
 {
     struct Signals * signals = ControlUnit(inst);   //generates the signals
@@ -339,16 +364,8 @@ int execution(struct Instruction * inst , struct RegisterFile * registerFile)   
 
     int readDataFromMem = 0;
 
-    if(signals->MemRead)
-        readDataFromMem = memory.memory[ALUResult];
-    if(signals->MemWrite)
-    {
-        memory.memory[ALUResult] = inst->rtVal;
-        readDataFromMem = memory.memory[ALUResult];
-    }
 
-
-
+    memoryState( inst , registerFile ,signals , &readDataFromMem , ALUResult);
 
     int upperVal = inst->imm << 16;
 
@@ -365,11 +382,10 @@ int execution(struct Instruction * inst , struct RegisterFile * registerFile)   
     PC = MUX_2_1(PC , readData1 , signals->Jalr);
 
 
-    if(signals->RegWrite)
-        registerFile->registers[writeReg] = writeData;
+    writeBack(registerFile , signals , writeReg , writeData);
 
 
     return PC;
 
-
 }
+
