@@ -333,7 +333,7 @@ void memoryState(struct Instruction * inst , struct RegisterFile * registerFile 
     }
 }
 
-void writeBack(struct RegisterFile * registerFile , struct  Signals* signals , int writeReg , int writeData)
+void writeBackState(struct RegisterFile * registerFile , struct  Signals* signals , int writeReg , int writeData)
 {
     if(signals->RegWrite)
         registerFile->registers[writeReg] = writeData;
@@ -382,7 +382,7 @@ int execution(struct Instruction * inst , struct RegisterFile * registerFile)   
     PC = MUX_2_1(PC , readData1 , signals->Jalr);
 
 
-    writeBack(registerFile , signals , writeReg , writeData);
+    writeBackState(registerFile , signals , writeReg , writeData);
 
 
     return PC;
