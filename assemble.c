@@ -4,8 +4,6 @@
 
 
 #include "assemble.h"
-
-
 #include "run.h"
 
 
@@ -83,25 +81,31 @@ int main() {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        static struct RegisterFile registerFile = {
-                {0,30,45,7,88,6,70,68,54,10,11,36,20,90,100}
+        struct RegisterFile registerFile = {
+                {0,30,45,7,88,6,70,68,54,10,11,36,20,90,100 , 45}
         };
 
 
 
-        struct Instruction * instForRun =  fetch(insts , 0);
-        instForRun = decode(instForRun, &registerFile);
-        int pc = execution(instForRun , &registerFile);
-        while(pc != -1) // halt
+        struct Instruction * instForRun =  fetch(insts , 0);    //IF
+        instForRun = decode(instForRun, &registerFile);        //ID
+        int pc = execution(instForRun , &registerFile);        //EXE // MEM // WB
+        printf("\n\t\t\t\t\tRegisters for line %i are as follows: \n" , 1);
+        for(int j = 0 ; j < 16; j++)
+            printf("\n\t\t\t\t\tRegister %d : %d\n" , j , registerFile.registers[j]);
+        while(pc != -1) // HALT
         {
             instForRun =  fetch(insts , pc);
             instForRun = decode(instForRun, &registerFile);
             pc = execution(instForRun , &registerFile);
+
+            printf("\n\t\t\t\t\tRegisters for line %i are as follows: \n" , pc);
+            for(int j = 0 ; j < 16; j++)
+                printf("\n\t\t\t\t\tRegister %d : %d\n" , j , registerFile.registers[j]);
         }
 
 
     }
-    return 0;
 }
 void show_in_animataion(char * str)
 {
