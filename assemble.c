@@ -15,14 +15,15 @@ int main() {
         printf("This is Linux\n");
     mkdir("Output");
     mkdir("Input");
-    show_welcome_message();
+    //show_welcome_message();
 
 
+    setbuf(stdout, NULL); // Disable buffering for stdout
 
     //////////////////////////////////////////////////////////////////
     while (1) {
         char inst[50];
-        printf("%s", "\t\t\t\t\t>> ");
+        printf("%s", "\n\t\t\t\t\t>> ");
         gets(inst);
 
         char *tmpInst = strtok(inst, " ");
@@ -82,27 +83,28 @@ int main() {
 
 
         struct RegisterFile registerFile = {
-                {0,30,45,7,88,6,70,68,54,10,11,36,20,90,100 , 45}
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 , 0}
         };
-
 
 
         struct Instruction * instForRun =  fetch(insts , 0);    //IF
         instForRun = decode(instForRun, &registerFile);        //ID
         int pc = execution(instForRun , &registerFile);        //EXE // MEM // WB
-        printf("\n\t\t\t\t\tRegisters for line %i are as follows: \n" , 1);
+        printf("\n\t\t\t\t\tRegisters for line %d are as follows:\n" , 1);
         for(int j = 0 ; j < 16; j++)
-            printf("\n\t\t\t\t\tRegister %d : %d\n" , j , registerFile.registers[j]);
+            printf("\n\t\t\t\t\tRegister %d : %d", j, registerFile.registers[j]);
         while(pc != -1) // HALT
         {
             instForRun =  fetch(insts , pc);
             instForRun = decode(instForRun, &registerFile);
             pc = execution(instForRun , &registerFile);
 
-            printf("\n\t\t\t\t\tRegisters for line %i are as follows: \n" , pc);
+            printf("\n\n\t\t\t\t\tRegisters for line %i are as follows: \n" , instForRun->PC+1);
             for(int j = 0 ; j < 16; j++)
-                printf("\n\t\t\t\t\tRegister %d : %d\n" , j , registerFile.registers[j]);
+                printf("\n\t\t\t\t\tRegister %d : %d" , j , registerFile.registers[j]);
         }
+
+        printf("\n");
 
 
     }
@@ -244,16 +246,24 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
     struct Instruction * insts = malloc(sizeof (struct Instruction) * 200);
     for(int i = 0 ; i < rslt.linesNum ; ++i)
     {
-        if(i == 6);
         char * tmp = strtok(rslt.strs[i], "\t");
         while(!is_op_code(tmp))
         {
             if(!strcmp(tmp , ".fill"))
             {
-                insts[i].instType = 3;
+                insts[i].instType = -1;
+                insts[i].dir = 3;
                 insts[i].PC = i;
                 break;
             }
+            else if(!strcmp(tmp , ".space"))
+            {
+                insts[i].instType = -1;
+                insts[i].dir = 4;
+                insts[i].PC = i;
+                break;
+            }
+
             tmp = strtok(NULL, "\t");
 
             if(tmp[strlen(tmp) - 1] == '\n')
@@ -271,7 +281,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
             }
 
         }
-        if(insts[i].instType != 3) // was not dir type
+        if(insts[i].instType != -1) // was not dir type
         {
             int tmpType; // to recognize the type of instruction
             insts[i].opCode = op_code_to_int(tmp, &tmpType); // to save opcode in decimal
@@ -280,6 +290,10 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
         }
         if(strcmp(tmp , "halt") != 0)
         {
+
+            if(tmp[strlen(tmp) - 1] == '\n')
+                tmp[strlen(tmp) - 1] = '\0';
+
             tmp = strtok(NULL, "\t"); // go to field part
 
             char *rgstrs = strtok(tmp, ","); // to split by ","
@@ -306,6 +320,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                         hasError = 1;
                         main();
                     }
+                    insts[i].dir = -1;
                     break;
                 case 1: // I_TYPE
                     insts[i].rt = strtol(rgstrs, &tmpEnd, 10); //rt
@@ -353,6 +368,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                                 main();
                             }
                         }
+                        if(insts[i].opCode == 11)
+                            insts[i].imm -= (insts[i].PC + 1);
+
                         if (insts[i].rs > 15 || insts[i].rt > 15) {
                             struct Error err = {i + 1, 4};
                             write_error(_errors_address, &err);
@@ -365,7 +383,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                     }
                     else
                         insts[i].imm = 0;
+
                     insts[i].rd = -1;
+                    insts[i].dir = -1;
                     break;
                 case 2: //J_TYPE
                     if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
@@ -387,20 +407,21 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                             main();
                         }
                     }
+                    insts[i].dir = -1;
                     insts[i].target = insts[i].imm;
                     insts[i].rs = -1;
                     insts[i].rt = -1;
                     insts[i].rd = -1;
 
                     break;
-                case 3 :
+                case -1:    //dir
                     if (rgstrs[0] >= '0' && rgstrs[0] <= '9'|| rgstrs[0] == '-') // if its number
-                        insts[i].dir = strtol(rgstrs, &tmpEnd, 10); // imm
+                        insts[i].dirVal = strtol(rgstrs, &tmpEnd, 10); // imm
                     else // if its label
                     {
                         int tmpInt = get_value(labels, numberOfLabels, rgstrs); //imm
                         if (tmpInt != -1)
-                            insts[i].dir = tmpInt;
+                            insts[i].dirVal = tmpInt;
                         else // label is not defined error
                         {
                             struct Error err = {i+1 , 4};
@@ -415,6 +436,8 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                     insts[i].rs = -1;
                     insts[i].rt = -1;
                     insts[i].rd = -1;
+                    insts[i].imm = -1;
+                    insts[i].instType = -1;
                     break;
                 default:
                     printf("\n\t\t\t\t\t\tERROR");
@@ -431,6 +454,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
             insts[i].opCode = 14;
 
         }
+
     }
     return insts;
 }
@@ -526,6 +550,10 @@ void to_machine_code(struct Instruction * inst , int numberOfLines)
 {
     for(int i = 0 ; i < numberOfLines; ++i)
     {
+        struct Instruction  * w;
+        w = &inst[i];
+
+
         char * tmpImm;
         int tmpDif;
         switch (inst[i].instType)
@@ -562,6 +590,12 @@ void to_machine_code(struct Instruction * inst , int numberOfLines)
 
                 break;
             case 2: //J_TYPE
+
+                if(inst[i].opCode == 14)
+                {
+                    strcpy(inst[i].inst , "0E000000");
+                    break;
+                }
                 //Unused digits --->
                 inst[i].inst[0] = '0';
                 //////////////////////
@@ -580,12 +614,15 @@ void to_machine_code(struct Instruction * inst , int numberOfLines)
                     inst[i].inst[j+4+tmpDif] = tmpImm[j];
 
                 break;
+            case -1:
+                inst[i].intInst = inst[i].dirVal;
+
             default:
                 //ERR
                 break;
         }
-
-        inst[i].intInst = hex_to_decimal(inst[i].inst);
+        if(inst[i].instType != -1)
+            inst[i].intInst = hex_to_decimal(inst[i].inst);
     }
 }
 
@@ -611,10 +648,10 @@ void write_output(char * fileName , int numberOfLines , struct Instruction * ins
     }
     for(int i = 0 ; i < numberOfLines; i++)
     {
-        if(insts[i].instType != 3)
+        if(insts[i].instType != 3 && insts[i].instType != 4)
             fprintf(filePtr, "%d\n", (int) insts[i].intInst);
         else
-            fprintf(filePtr, "%d\n", (int) insts[i].dir); // for the direction
+            fprintf(filePtr, "%d\n", (int) insts[i].dirVal); // for the direction
     }
 
     fclose(filePtr);

@@ -2,4 +2,5 @@
 	sw	1,1,1
 	lw	2,1,1
 start	addi	2,2,10
-	halt
+	j	end
+end	halt
