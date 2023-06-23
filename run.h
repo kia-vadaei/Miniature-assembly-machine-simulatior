@@ -86,11 +86,11 @@ int * decimal2binary(int number)
     int tmpNum = abs(number);
 
     // counter for binary array
-    int i = 0;
+    int i = 31;
     while (tmpNum > 0) {
         binaryNum[i] = tmpNum % 2;
         tmpNum = tmpNum / 2;
-        i++;
+        i--;
     }
     if(number < 0)
     {
@@ -207,20 +207,10 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
                 return 0;
         case 3:     //or
             *zero = 0;
-            RD1 = decimal2binary(readData1);
-            RD2 = decimal2binary(readData2);
-
-            for(int i = 0; i < 32; i++)
-                RD1[i] = RD1[i] | RD2[i];
-            return binary2decimal(RD1);
+            return readData1 | readData2;
         case 4:     //nand
             *zero = 0;
-            RD1 = decimal2binary(readData1);
-            RD2 = decimal2binary(readData2);
-
-            for(int i = 0; i < 32; i++)
-                RD1[i] = !(RD1[i] & RD2[i]);
-            return binary2decimal(RD1);
+            return !(readData1 & readData2);
 
             break;
         case 5:     //addi
@@ -234,12 +224,7 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
                 return 0;
         case 7:     //ori
             *zero = 0;
-            RD1 = decimal2binary(abs(readData1));
-            RD2 = decimal2binary(abs(readData2));
-
-            for(int i = 0; i < 32; i++)
-                RD1[i] = RD1[i] | RD2[i];
-            return binary2decimal(RD1);
+            return readData2 | readData1;
         case 9:     //lw
             *zero = 0;
             return readData1 + readData2;
@@ -260,7 +245,7 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
 
 struct Signals * ControlUnit(struct Instruction * inst)
 {
-    struct Signals * signals;
+    struct Signals * signals = malloc(sizeof (struct Signals));
     if(inst->instType == 0) // R-TYPE
         signals->RegDest = 1;
     else
@@ -271,7 +256,7 @@ struct Signals * ControlUnit(struct Instruction * inst)
     else
         signals->Jump = 0;
 
-    if(inst->instType == 11)
+    if(inst->opCode == 11)
         signals->Branch = 1;
     else
         signals->Branch = 0;
@@ -293,12 +278,12 @@ struct Signals * ControlUnit(struct Instruction * inst)
     else
         signals->MemWrite = 0;
 
-    if(inst->instType == 0 || inst->opCode == 12) //R-TYPE
+    if(inst->instType == 0 || inst->opCode == 12 || inst->opCode == 11) //R-TYPE
         signals->ALUSrc = 0;
     else if(inst->instType == 1 && inst->opCode != 12) //I-TYPE and not jalr
         signals->ALUSrc = 1;
 
-    if(inst->opCode != 10 && inst->opCode != 13 && inst->opCode != 14)
+    if(inst->opCode != 10 && inst->opCode != 13 && inst->opCode != 14 && inst->opCode != 11)
         signals->RegWrite = 1;
     else
         signals->RegWrite = 0;
@@ -365,13 +350,14 @@ int execution(struct Instruction * inst , struct RegisterFile * registerFile)   
     int readDataFromMem = 0;
 
 
+
     memoryState( inst , registerFile ,signals , &readDataFromMem , ALUResult);
 
     int upperVal = inst->imm << 16;
 
     int instResult = MUX_3_2(ALUResult , upperVal , readDataFromMem , signals->MemToReg , signals->Upper);
 
-    int writeData = MUX_2_1(instResult , PC , signals->Jalr);
+    int writeData = MUX_2_1(instResult , PC , signals->Jalr);   //for jalr
 
     int branchTarget = ALU(0 , PC , inst->imm , &tmpZero);
 

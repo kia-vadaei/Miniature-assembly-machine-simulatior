@@ -1,276 +1,160 @@
-input1.txt Process finished with exit code 0.
+input7.txt Process finished with exit code 0.
 
 ################################
 
-input2.txt Process finished with exit code 0.
+input7.txt Process finished with exit code 0.
 
 ################################
 
-input3.txt Process finished with exit code 0.
+input7.txt Process finished with exit code 0.
 
 ################################
 
-input4.txt Process finished with exit code 0.
+input7.txt Process finished with exit code 0.
 
 ################################
 
-input5.txt Process finished with exit code 0.
+input7.txt Process finished with exit code 0.
 
 ################################
 
-input2.txt Process finished with exit code 1.
+input7.txt Process finished with exit code 0.
 
---> Undefined label in line 1 !
-
-################################
-
-input2.txt Process finished with exit code 1.
-
---> Undefined label in line 1 !
-
-################################
-
-Input2.txt Process finished with exit code 1.
-
---> Undefined label in line 1 !
-
-################################
-
-Input2.txt Process finished with exit code 1.
-
---> Undefined label in line 1 !
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-Input2.txt Process finished with exit code 1.
-
---> Undefined label in line 1 !
-
-################################
-
-input2.txt Process finished with exit code 1.
-
---> The label defined in line 4 has been defined more than once !
-
-################################
-
-input2.txt Process finished with exit code 1.
-
---> The offset defined in line 3 overflows the 16 bits !
-
-################################
-
-input2.txt Process finished with exit code 0.
-
-################################
-
-input2.txt Process finished with exit code 1.
-
---> Undefined label in line 1 !
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input1.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
-################################
-
-input6.txt Process finished with exit code 0.
-
 ################################
 
-input6.txt Process finished with exit code 0.
+input7.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input8.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input8.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input8.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input9.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input10.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input10.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input10.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input10.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input11.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input11.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input11.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input12.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input12.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input12.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input13.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input14.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input15.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input15.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input16.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input17.txt Process finished with exit code 0.
 
 ################################
 
-input6.txt Process finished with exit code 0.
+input18.txt Process finished with exit code 0.
 
 ################################
 

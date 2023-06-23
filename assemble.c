@@ -15,14 +15,15 @@ int main() {
         printf("This is Linux\n");
     mkdir("Output");
     mkdir("Input");
-    show_welcome_message();
+    //show_welcome_message();
 
 
+    setbuf(stdout, NULL); // Disable buffering for stdout
 
     //////////////////////////////////////////////////////////////////
     while (1) {
         char inst[50];
-        printf("%s", "\t\t\t\t\t>> ");
+        printf("%s", "\n\t\t\t\t\t>> ");
         gets(inst);
 
         char *tmpInst = strtok(inst, " ");
@@ -82,27 +83,28 @@ int main() {
 
 
         struct RegisterFile registerFile = {
-                {0,30,45,7,88,6,70,68,54,10,11,36,20,90,100 , 45}
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 , 0}
         };
-
 
 
         struct Instruction * instForRun =  fetch(insts , 0);    //IF
         instForRun = decode(instForRun, &registerFile);        //ID
         int pc = execution(instForRun , &registerFile);        //EXE // MEM // WB
-        printf("\n\t\t\t\t\tRegisters for line %i are as follows: \n" , 1);
+        printf("\n\t\t\t\t\tRegisters for line %d are as follows:\n" , 1);
         for(int j = 0 ; j < 16; j++)
-            printf("\n\t\t\t\t\tRegister %d : %d\n" , j , registerFile.registers[j]);
+            printf("\n\t\t\t\t\tRegister %d : %d", j, registerFile.registers[j]);
         while(pc != -1) // HALT
         {
             instForRun =  fetch(insts , pc);
             instForRun = decode(instForRun, &registerFile);
             pc = execution(instForRun , &registerFile);
 
-            printf("\n\t\t\t\t\tRegisters for line %i are as follows: \n" , pc);
+            printf("\n\n\t\t\t\t\tRegisters for line %i are as follows: \n" , instForRun->PC+1);
             for(int j = 0 ; j < 16; j++)
-                printf("\n\t\t\t\t\tRegister %d : %d\n" , j , registerFile.registers[j]);
+                printf("\n\t\t\t\t\tRegister %d : %d" , j , registerFile.registers[j]);
         }
+
+        printf("\n");
 
 
     }
@@ -353,6 +355,9 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
                                 main();
                             }
                         }
+                        if(insts[i].opCode == 11)
+                            insts[i].imm -= (insts[i].PC + 1);
+
                         if (insts[i].rs > 15 || insts[i].rt > 15) {
                             struct Error err = {i + 1, 4};
                             write_error(_errors_address, &err);
@@ -431,6 +436,7 @@ struct Instruction * set_each_line_inst(int numberOfLabels ,struct Map * labels,
             insts[i].opCode = 14;
 
         }
+
     }
     return insts;
 }
