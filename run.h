@@ -64,7 +64,7 @@ struct Signals
 
 
 
-struct Memory memory;
+static struct Memory memory;
 
 
 
@@ -74,78 +74,6 @@ struct Memory memory;
 
 
 
-
-int * decimal2binary(int number)
-{
-    // array to store binary number
-    int binaryNum[32];
-
-    for(int i = 0 ; i < 32 ; i++)
-        binaryNum[i] = 0;
-
-    int tmpNum = abs(number);
-
-    // counter for binary array
-    int i = 31;
-    while (tmpNum > 0) {
-        binaryNum[i] = tmpNum % 2;
-        tmpNum = tmpNum / 2;
-        i--;
-    }
-    if(number < 0)
-    {
-        boolean zeroIgnorFlag = 0;
-        for(int i = 31 ; i >= 0 ; i--)
-        {
-            if(!binaryNum[i] && !zeroIgnorFlag)
-                continue;
-            else if(binaryNum[i] && !zeroIgnorFlag)
-            {
-                zeroIgnorFlag = 1;
-                continue;
-            }
-            else if(zeroIgnorFlag)
-                binaryNum[i] = !binaryNum[i];
-        }
-    }
-
-    return binaryNum;
-}
-
-int binary2decimal(int * binaryNum)
-{
-    int decimal = 0;
-    int base = 1;
-    boolean isNegetiveFlag = 0;
-    if(binaryNum[0])
-    {
-        isNegetiveFlag = 1;
-        boolean zeroIgnorFlag = 0;
-        for(int i = 31 ; i >= 0 ; i--)
-        {
-            if(!binaryNum[i] && !zeroIgnorFlag)
-                continue;
-            else if(binaryNum[i] && !zeroIgnorFlag)
-            {
-                zeroIgnorFlag = 1;
-                continue;
-            }
-            else if(!binaryNum[i] && zeroIgnorFlag)
-                binaryNum[i] = 1;
-            else if(binaryNum[i] && zeroIgnorFlag)
-                binaryNum[i] = 0;
-        }
-    }
-
-    for (int i = 31 ; i >= 0 ; i--)
-    {
-        decimal += binaryNum[i] * base;
-        base *= 2;
-    }
-    if(isNegetiveFlag)
-        decimal *= -1;
-    return decimal;
-}
 
 
 int MUX_2_1(int val0 , int val1 , int signal)
@@ -210,10 +138,10 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
             return readData1 | readData2;
         case 4:     //nand
             *zero = 0;
-            return !(readData1 & readData2);
-
-            break;
-        case 5:     //addi
+            int tmp = readData1 & readData2;
+            int maskedNumber = tmp & ((1 << 32) - 1);
+            return ~ maskedNumber;
+            case 5:     //addi
             *zero = 0;
             return readData1 + readData2;
         case 6:     //slti
@@ -243,7 +171,7 @@ int ALU(int ALUOP , int readData1 , int readData2  , int * zero)   //*zero is a 
     }
 }
 
-struct Signals * ControlUnit(struct Instruction * inst)
+struct Signals * control_unit(struct Instruction * inst)
 {
     struct Signals * signals = malloc(sizeof (struct Signals));
     if(inst->instType == 0) // R-TYPE
@@ -307,7 +235,7 @@ struct Signals * ControlUnit(struct Instruction * inst)
     return  signals;
 }
 
-void memoryState(struct Instruction * inst , struct RegisterFile * registerFile , struct  Signals* signals , int * readDataFromMem , int ALUResult)
+void memory_state(struct Instruction * inst , struct RegisterFile * registerFile , struct  Signals* signals , int * readDataFromMem , int ALUResult)
 {
     if(signals->MemRead)
         *readDataFromMem = memory.memory[ALUResult];
@@ -318,16 +246,35 @@ void memoryState(struct Instruction * inst , struct RegisterFile * registerFile 
     }
 }
 
-void writeBackState(struct RegisterFile * registerFile , struct  Signals* signals , int writeReg , int writeData)
+void write_back_state(struct RegisterFile * registerFile , struct  Signals* signals , int writeReg , int writeData)
 {
     if(signals->RegWrite)
         registerFile->registers[writeReg] = writeData;
 }
 
+void dir_handeling(struct Instruction * inst)
+{
+    if(inst->dir == 3)  //.fill
+    {
+        memory.memory[inst->PC] = inst->dirVal;
+    }
+    else if(inst->dir == 4) //space
+    {
+        for(int i = inst->PC ; i < inst->PC + inst->dirVal ; i++)
+            memory.memory[i] = 0;
+    }
+}
+
 
 int execution(struct Instruction * inst , struct RegisterFile * registerFile)    //returns PC
 {
-    struct Signals * signals = ControlUnit(inst);   //generates the signals
+    if(inst->instType == -1)
+    {
+        dir_handeling(inst);
+        return inst->PC + 1;
+    }
+
+    struct Signals * signals = control_unit(inst);   //generates the signals
 
     int tmpZero;
     int PC = ALU(0 , inst->PC , 1 , &tmpZero);   //PC+1
@@ -350,8 +297,7 @@ int execution(struct Instruction * inst , struct RegisterFile * registerFile)   
     int readDataFromMem = 0;
 
 
-
-    memoryState( inst , registerFile ,signals , &readDataFromMem , ALUResult);
+    memory_state(inst, registerFile, signals, &readDataFromMem, ALUResult);
 
     int upperVal = inst->imm << 16;
 
@@ -368,7 +314,7 @@ int execution(struct Instruction * inst , struct RegisterFile * registerFile)   
     PC = MUX_2_1(PC , readData1 , signals->Jalr);
 
 
-    writeBackState(registerFile , signals , writeReg , writeData);
+    write_back_state(registerFile, signals, writeReg, writeData);
 
 
     return PC;

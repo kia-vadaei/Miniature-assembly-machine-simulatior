@@ -51,7 +51,7 @@ struct Map
 };
 
 struct Instruction{
-    size_t instType; // 0 means r type, 1 means i type and 2 means j type and 3 means dir type
+    int instType; // 0 means r type, 1 means i type and 2 means j type and 3 means dir type
     size_t intInst;
     size_t opCode;
     char inst[9];
@@ -64,7 +64,8 @@ struct Instruction{
     int imm;
     int target;
     int PC;
-    int dir;
+    int dir;    //3 for fill and 4 for space
+    int dirVal;
 };
 
 struct Error
@@ -97,7 +98,6 @@ void write_error(char * , struct Error *);
 char R_TYPE [][10] = {"add" , "sub" , "slt" , "or" , "nand"};
 char I_TYPE [][10] = {"addi" , "slti" , "ori" , "lui" , "lw" , "sw" ,"beq" ,"jalr"};
 char J_TYPE [][10] = {"j" , "halt"};
-char DIR_TYPE[][10]  = {".fill" , ".space"};
 
 
 

@@ -158,3 +158,171 @@ input18.txt Process finished with exit code 0.
 
 ################################
 
+input11.txt Process finished with exit code 0.
+
+################################
+
+input11.txt Process finished with exit code 0.
+
+################################
+
+input11.txt Process finished with exit code 0.
+
+################################
+
+input11.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input11.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input20.txt Process finished with exit code 0.
+
+################################
+
+input20.txt Process finished with exit code 0.
+
+################################
+
+input20.txt Process finished with exit code 0.
+
+################################
+
+input20.txt Process finished with exit code 1.
+
+--> Wrong register called in line 7 !
+
+################################
+
+input20.txt Process finished with exit code 1.
+
+--> Wrong register called in line 7 !
+
+################################
+
+input20.txt Process finished with exit code 1.
+
+--> Wrong register called in line 7 !
+
+################################
+
+input20.txt Process finished with exit code 1.
+
+--> Wrong register called in line 7 !
+
+################################
+
+input20.txt Process finished with exit code 1.
+
+--> Wrong register called in line 7 !
+
+################################
+
+input20.txt Process finished with exit code 1.
+
+--> Wrong register called in line 7 !
+
+################################
+
+input20.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input20.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input19.txt Process finished with exit code 0.
+
+################################
+
+input20.txt Process finished with exit code 0.
+
+################################
+
