@@ -10,12 +10,13 @@
 int main() {
 
     if (OS_Windows) {
-        system("color 06");
+        system("color 06"); //console color
     } else
         printf("This is Linux\n");
+
     mkdir("Output");
     mkdir("Input");
-    //show_welcome_message();
+    show_welcome_message();
 
 
     setbuf(stdout, NULL); // Disable buffering for stdout
